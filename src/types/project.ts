@@ -7,11 +7,13 @@
  * techStack：string[] 项目使用的技术栈。比如['React', 'TypeScript', 'Node.js']
  * link?:string 项目链接，可选项。
 */
+export type ProjectStatus = "planning" | "building" | "done";
+
 export type Project = {
     id: number;
     title: string;
     description: string;
     techStack: string[];
     link?: string;
-    status: "planning" | "building" | "done";
+    status: ProjectStatus;
 }

@@ -40,6 +40,17 @@
 
 我不确定的地方：目前来看就是一个简单的定义么，没有别的方面。如果后续有需要，我会继续学习。
 
+ChatGPT 修正建议：
+
+> [!NOTE]
+> 🟢 已通过：已经理解 TypeScript 可以统一类型、减少低级错误、提高维护性。
+
+> [!TIP]
+> 🟢 建议补充：TypeScript 主要是在开发阶段做静态类型检查，帮助我们在代码运行前发现类型错误。但 TypeScript 不等于运行时校验，接口返回的数据如果不符合预期，仍然需要前端运行时判断或后端校验。
+
+> [!IMPORTANT]
+> 📌 必须记住：TypeScript 能提高开发阶段的可靠性，但不能完全替代接口校验、后端校验和运行时错误处理。
+
 ---
 
 #### A2. Vue 组件化开发解决了什么问题？
@@ -47,6 +58,14 @@
 我的答案：可以抽离出组件与页面的关系，在一个复杂冗余的页面上，如果将单独的组件抽离，我觉得会使开发更加清晰便捷，同时抽离的组件，还可以提供给别的页面使用。可以提高开发效率。此外同样的一个组件，如果多个页面同时使用，并且发生了变化，那我只需要修改那个组件代码，则可以覆盖到每个页面，也是大大的提升了效率。
 
 我不确定的地方：
+
+ChatGPT 修正建议：
+
+> [!NOTE]
+> 🟢 已通过：已经理解组件化可以复用代码、拆分页面、提高维护性。
+
+> [!TIP]
+> 🟢 面试表达可以优化为：组件化的本质是把复杂页面拆成可维护、可复用、可组合的小模块。这样可以降低页面复杂度，提高开发效率，也方便后续统一维护和扩展。
 
 ---
 
@@ -71,6 +90,17 @@
 我的答案：我说一下我以前的认知，我认为的AI应用工程师，就是利用AI来解决应用场景的工程师。而算法工程师，我都认为是一些后端工程师，利用算法来调优。
 
 我不确定的地方：
+
+ChatGPT 修正建议：
+
+> [!WARNING]
+> 🔴 需要修改：原答案对算法工程师的理解不够准确。算法工程师不是简单的后端调优，而是更偏模型、算法、数据和训练。
+
+> [!TIP]
+> 🟢 建议改成：AI 应用工程师重点是把已有大模型或 AI 能力接入真实业务，做产品功能，比如 AI 总结、AI 问答、AI 文案生成、RAG 知识库、AI 工作流。算法工程师重点是模型、算法、数据、训练、评估、优化，比如模型训练、特征工程、推荐算法、机器学习、深度学习、模型效果优化。
+
+> [!IMPORTANT]
+> 📌 必须记住：我当前目标是 AI 应用工程师，不是算法工程师。重点不是训练模型，而是把 AI 能力接入产品和业务流程。
 
 ---
 
@@ -272,12 +302,22 @@ defineProps<{
 我的理解：
 
 ```txt
-这里写你对 App.vue 的理解。
-比如：
-App.vue 中定义了 projects 数组。
-每个 project 都符合 Project 类型。
-然后通过 v-for 循环渲染多个 ProjectCard。
+App.vue 中定义了 firstProject 对象。
+这个对象使用 Project 类型进行约束。
+然后通过 :project="firstProject" 把数据传给 ProjectCard。
+ProjectCard 通过 props 接收数据并渲染。
 ```
+
+ChatGPT 修正建议：
+
+> [!WARNING]
+> 🔴 需要修改：当前答案写成了 projects 数组 + v-for，但实际代码是 firstProject 单个对象。
+
+> [!TIP]
+> 🟢 建议改成：App.vue 中定义了 firstProject 对象，这个对象使用 Project 类型进行约束，然后通过 :project="firstProject" 把数据传给 ProjectCard，ProjectCard 通过 props 接收数据并渲染。
+
+> [!IMPORTANT]
+> 📌 必须记住：复盘和作业答案必须和当前代码保持一致，不能写还没有实现的功能。
 
 ---
 
@@ -407,6 +447,17 @@ git commit -m "feat: initialize yantang lab with project cards"
 
 ```
 
+ChatGPT 修正建议：
+
+> [!WARNING]
+> 🔴 需要修改：当前答案只写了“启动项目开发环境”，还不够具体。
+
+> [!TIP]
+> 🟢 建议补充：npm run dev 会读取 package.json 中 scripts 里的 dev 命令。在当前 Vite 项目中，它会启动 Vite 开发服务器，让项目运行在本地地址，并支持代码修改后的热更新。
+
+> [!IMPORTANT]
+> 📌 必须记住：npm run xxx 本质上是执行 package.json 里 scripts 对应的命令。
+
 ---
 
 ### 8.3 我能否不用看代码，说出 ProjectCard 的数据从哪里来？
@@ -483,3 +534,71 @@ git commit -m "feat: initialize yantang lab with project cards"
 - [√] 其他：vue3更加深入的内容。
 
 ---
+
+## ChatGPT 批改记录
+
+### 1. 本次评分
+
+- 综合评分：82/100
+- 代码完成度：85/100
+- 概念理解：75/100
+- 作业完整度：80/100
+- Git/GitHub 流程：90/100
+
+### 2. 本次通过内容
+
+> [!NOTE]
+> 🟢 已通过：Day 1 代码整体完成度合格，Project 类型、ProjectCard 组件、props 传值、GitHub 提交流程已经跑通。
+
+> [!NOTE]
+> 🟢 已通过：已经完成 yantang-lab 项目的初始化、GitHub 推送、公开仓库设置和学习目录整理。
+
+### 3. 需要重点修正的问题
+
+#### 问题 1：App.vue 数据流表达不准确
+
+> [!WARNING]
+> 🔴 需要修改：答案中写成了 projects 数组和 v-for，但当前代码实际是 firstProject 单个对象。
+
+> [!TIP]
+> 🟢 正确表达：App.vue 中定义了 firstProject 对象，这个对象使用 Project 类型进行约束，然后通过 :project="firstProject" 传给 ProjectCard，ProjectCard 通过 props 接收数据并渲染。
+
+#### 问题 2：AI 应用工程师和算法工程师区别不准确
+
+> [!WARNING]
+> 🔴 需要修改：算法工程师不是简单的后端调优，而是更偏模型、算法、数据、训练和效果优化。
+
+> [!TIP]
+> 🟢 正确表达：AI 应用工程师重点是把已有 AI 能力接入业务系统；算法工程师重点是模型训练、算法优化、数据处理和模型效果提升。
+
+#### 问题 3：npm run dev 理解需要补充
+
+> [!WARNING]
+> 🔴 需要修改：不能只记成“启动项目”，要知道它执行的是 package.json 里的 scripts.dev。
+
+> [!TIP]
+> 🟢 正确表达：npm run dev 会读取 package.json 中 scripts 里的 dev 命令，在 Vite 项目中通常会启动 Vite 开发服务器，并支持本地预览和热更新。
+
+#### 问题 4：TypeScript 的边界需要补充
+
+> [!WARNING]
+> 🔴 需要修改：TypeScript 不是万能校验工具，它主要解决开发阶段的类型检查。
+
+> [!TIP]
+> 🟢 正确表达：TypeScript 能在开发阶段提前发现类型错误，但接口返回数据、用户输入、后端数据仍然需要运行时校验和异常处理。
+
+### 4. 今日结论
+
+> [!IMPORTANT]
+> 📌 Day 1 通过，可以进入 Day 2。
+
+> [!IMPORTANT]
+> 📌 下一步重点：Vue3 响应式基础、多项目数组、v-for 列表渲染、computed 计算属性，以及把 ProjectCard 从单个项目升级为多个项目卡片。
+
+### 5. 下一步待办
+
+- [ ] 修正 App.vue 理解部分
+- [ ] 修正 AI 应用工程师和算法工程师区别
+- [ ] 补充 npm run dev 的具体含义
+- [ ] 补充 TypeScript 静态类型检查的边界
+- [ ] 提交本次修正
