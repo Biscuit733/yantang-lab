@@ -2,9 +2,12 @@
     <article class="project-card">
         <h3>{{ project.title }}</h3>
         <p>{{ project.description }}</p>
-
+        <p>状态：{{ project.status }}</p>
         <div class="tech-list">
-            <span v-for="tech in project.techStack" :key="tech">{{ tech }}</span>
+            <p>技术栈：</p>
+            <span v-for="(tech,index) in project.techStack" :key="tech">{{ tech }}
+                <span v-if="index !== project.techStack.length - 1">/</span>
+            </span>
         </div>
     </article>
 </template>

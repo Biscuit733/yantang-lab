@@ -13,4 +13,5 @@ export type Project = {
     description: string;
     techStack: string[];
     link?: string;
+    status: "planning" | "building" | "done";
 }

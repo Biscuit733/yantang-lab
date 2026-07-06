@@ -23,7 +23,8 @@
     id:1,
     title: 'YanTang Lab 个人站',
     description: '用于展示我的前端、全栈、AI应用和部署能力。',
-    techStack: ['Vue3', 'TypeScript', 'Vite']
+    techStack: ['Vue3', 'TypeScript', 'Vite'],
+    status: "planning"
   }
 </script>
 
