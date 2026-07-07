@@ -150,14 +150,15 @@
 
 ```ts
 // 粘贴 src/types/project.ts 的代码
-export type ProjectStatus = 'planning" | "building" | "done'
+export type ProjectStatus = 'planning' | 'building' | 'done'
+
 export type Project = {
-    id: number;
-    title: string;
-    description: string;
-    techStack: string[];
-    link?: string;
-    status: ProjectStatus;
+  id: number
+  title: string
+  description: string
+  techStack: string[]
+  link?: string
+  status: ProjectStatus
 }
 
 ```
@@ -175,30 +176,34 @@ Project 是一个对象类型，定义了项目的属性，包括id, title, desc
 
 ```ts
 // 粘贴 App.vue 中 projects 数组代码
-  const Projects : Project[] = [{
-    id:1,
+const projects: Project[] = [
+  {
+    id: 1,
     title: 'YanTang Lab 个人站',
     description: '用于展示我的前端、全栈、AI应用和部署能力。',
     techStack: ['Vue3', 'TypeScript', 'Vite'],
-    status: "planning"
-  },{
-    id:2,
+    status: 'planning',
+  },
+  {
+    id: 2,
     title: 'learning Pro',
     description: '学习全栈知识，ai应用开发，部署能力',
     techStack: ['Vue3', 'TypeScript', 'Vite'],
-    status: "building",
-    link: 'https://github.com/tjy1994/learning-pro'
-  },{
-    id:3,
+    status: 'building',
+    link: 'https://github.com/tjy1994/learning-pro',
+  },
+  {
+    id: 3,
     title: '第三个模块内容',
     description: '用于展示我的前端、全栈、AI应用和部署能力。',
     techStack: ['Vue3', 'TypeScript', 'Vite'],
-    status: "done",
-    link: 'https://github.com/tjy1994/yantang-lab'
-  }]
+    status: 'done',
+    link: 'https://github.com/tjy1994/yantang-lab',
+  },
+]
 ```
 
-我的理解：Projects 是一个数组集合，可以存放多个对象。
+我的理解：projects 是一个数组集合，可以存放多个项目对象。
 
 ```txt
 
@@ -212,7 +217,7 @@ Project 是一个对象类型，定义了项目的属性，包括id, title, desc
 <!-- 粘贴 App.vue 中 ProjectCard v-for 部分 -->
 <template>
   <div class="project-list">
-    <ProjectCard v-for="project in Projects" :key="project.id" :project="project" />
+    <ProjectCard v-for="project in projects" :key="project.id" :project="project" />
   </div>
 </template>
 ```
@@ -231,14 +236,15 @@ Project 是一个对象类型，定义了项目的属性，包括id, title, desc
 
 ```ts
 // 粘贴完整代码
-export type ProjectStatus = 'planning" | "building" | "done'
+export type ProjectStatus = 'planning' | 'building' | 'done'
+
 export type Project = {
-    id: number;
-    title: string;
-    description: string;
-    techStack: string[];
-    link?: string;
-    status: ProjectStatus;
+  id: number
+  title: string
+  description: string
+  techStack: string[]
+  link?: string
+  status: ProjectStatus
 }
 ```
 
@@ -249,35 +255,42 @@ export type Project = {
 ```vue
 <!-- 粘贴完整代码 -->
 <template>
-  <div class="project-card">
-    <h2>{{ project.title }}</h2>
+  <article class="project-card">
+    <h3>{{ project.title }}</h3>
     <p>{{ project.description }}</p>
-    <ul>
-      <li v-for="tech in project.techStack" :key="tech">{{ tech }}</li>
-    </ul>
-    <p v-if="project.status === 'done'">已完成</p>
-    <p v-else-if="project.status === 'building'">进行中</p>
-    <p v-else-if="project.status === 'planning'">计划中</p>
-    <a v-if="project.link" :href="project.link" target="_blank">查看项目</a>
-  </div>
+    <p>状态：{{ project.status }}</p>
+
+    <div class="tech-list">
+      <p>技术栈：</p>
+      <span v-for="(tech, index) in project.techStack" :key="tech">
+        {{ tech }}
+        <span v-if="index !== project.techStack.length - 1">/</span>
+      </span>
+    </div>
+
+    <a v-if="project.link" :href="project.link" target="_blank" rel="noreferrer">
+      查看项目
+    </a>
+  </article>
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue'
+import type { Project } from '../types/project'
 
-const props = defineProps({
-  project: {
-    type: Object as () => Project,
-    default: () => ({})
-  }
-})
+defineProps<{ project: Project }>()
 </script>
 
 <style scoped>
 .project-card {
   padding: 20px;
   border: 1px solid #ccc;
-  margin-bottom: 20px;
+  border-radius: 5px;
+}
+
+.tech-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 </style>
 ```
@@ -288,48 +301,50 @@ const props = defineProps({
 
 ```vue
 <!-- 粘贴完整代码 -->
-
 <template>
   <main class="app">
     <h1>YanTang Lab</h1>
     <p>我的全栈 + AI 工程师成长实验室</p>
 
-    <ProjectCard v-for="project in Projects" :key="project.id" :project="project" />
+    <ProjectCard v-for="project in projects" :key="project.id" :project="project" />
   </main>
 </template>
 
 <script setup lang="ts">
 /**
- *  import ProjectCard 引入组件
- *  import type { Project } 引入项目类型
- *  const firstProject:Project 声明firstProject 必须符合 Project类型
- *  <ProjectCard :project="firstProject" /> 渲染组件并传递firstProject
- *  :project 是v-bind简写，将firstProject 作为属性传递给组件
+ * App.vue 负责定义项目列表数据。
+ * projects 使用 Project[] 类型约束。
+ * 页面通过 v-for 遍历 projects，
+ * 并把每一个 project 通过 props 传给 ProjectCard。
  */
-  import ProjectCard from './components/ProjectCard.vue'
-  import type { Project } from './types/project'
+import ProjectCard from './components/ProjectCard.vue'
+import type { Project } from './types/project'
 
-  const Projects : Project[] = [{
-    id:1,
+const projects: Project[] = [
+  {
+    id: 1,
     title: 'YanTang Lab 个人站',
     description: '用于展示我的前端、全栈、AI应用和部署能力。',
     techStack: ['Vue3', 'TypeScript', 'Vite'],
-    status: "planning"
-  },{
-    id:2,
+    status: 'planning',
+  },
+  {
+    id: 2,
     title: 'learning Pro',
     description: '学习全栈知识，ai应用开发，部署能力',
     techStack: ['Vue3', 'TypeScript', 'Vite'],
-    status: "building",
-    link: 'https://github.com/tjy1994/learning-pro'
-  },{
-    id:3,
+    status: 'building',
+    link: 'https://github.com/tjy1994/learning-pro',
+  },
+  {
+    id: 3,
     title: '第三个模块内容',
     description: '用于展示我的前端、全栈、AI应用和部署能力。',
     techStack: ['Vue3', 'TypeScript', 'Vite'],
-    status: "done",
-    link: 'https://github.com/tjy1994/yantang-lab'
-  }]
+    status: 'done',
+    link: 'https://github.com/tjy1994/yantang-lab',
+  },
+]
 </script>
 
 <style scoped>
@@ -404,6 +419,18 @@ const props = defineProps({
 ```txt
 today,i learned how to use Vue3 and TypeScript to manage list of projects.List can be rendered many components with "v-for".components prop is used to pass data to child components.
 ```
+
+正确表达：
+
+1. I use an array to manage multiple projects.
+2. This component is used to render a project card.
+3. Each project is passed to the ProjectCard component through props.
+
+英文项目介绍修正版：
+
+Today, I learned how to use Vue 3 and TypeScript to manage a list of projects.
+The project list is rendered with v-for.
+Props are used to pass data from the parent component to the child component.
 
 可参考句型：
 
@@ -503,7 +530,9 @@ GitHub 链接：
 ## 9.1 今天真正学会了什么？
 
 ```txt
-
+今天真正学会了用 Project[] 表示多个项目对象，并用 projects 数组统一管理项目列表。
+也理解了 App.vue 作为父组件负责准备数据，ProjectCard 作为子组件负责展示单个项目卡片。
+通过 v-for 可以把数组里的每一个 project 渲染成一个 ProjectCard。
 ```
 
 ---
@@ -511,7 +540,9 @@ GitHub 链接：
 ## 9.2 今天只是照着做但还没完全懂的地方？
 
 ```txt
-
+对 Vue 在 v-for 更新列表时如何根据 key 复用 DOM 还没有完全理解。
+对 TypeScript 联合类型 ProjectStatus 的底层意义还需要继续练习。
+代码能照着写出来，但还需要多练习不用提示也能独立写出完整数据流。
 ```
 
 ---
@@ -519,7 +550,9 @@ GitHub 链接：
 ## 9.3 今天最大的错误或卡点是什么？
 
 ```txt
-
+最大的错误是命名和文档没有和代码保持一致。
+代码里使用了 Projects 大写变量，不符合普通变量小驼峰命名习惯。
+文档里还残留 firstProject 旧注释，并且 ProjectStatus 代码块出现了引号粘贴错误。
 ```
 
 ---
@@ -527,7 +560,9 @@ GitHub 链接：
 ## 9.4 我能不能不用看代码解释 `v-for`？
 
 ```txt
-
+可以大致解释：v-for 是 Vue 用来遍历数组并渲染列表的指令。
+比如 projects 是一个项目数组，v-for="project in projects" 会把数组里的每一个项目取出来。
+每取出一个 project，就渲染一个 ProjectCard，并通过 :project="project" 把当前项目数据传给子组件。
 ```
 
 ---
@@ -535,7 +570,8 @@ GitHub 链接：
 ## 9.5 明天最需要补什么？
 
 ```txt
-
+明天最需要补 Vue3 响应式基础，包括 ref、reactive、computed 和事件绑定。
+同时还需要继续练习数组列表渲染、组件 props 传值，以及 key 的作用。
 ```
 
 ---
@@ -606,3 +642,47 @@ GitHub 链接：
 - 本文件内容
 - Git commit 信息
 - 你最不确定的 1-3 个问题
+
+## ChatGPT 批改记录
+
+### 1. 本次评分
+
+- 代码完成度：78/100
+- 概念理解：80/100
+- 作业完整度：62/100
+- 代码规范：65/100
+- 英语练习：68/100
+- 综合评分：72/100
+
+### 2. 本次结论
+
+> [!IMPORTANT]
+> Day 2 条件通过，可以进入 Day 3，但必须先完成返工。
+
+### 3. 必须修正的问题
+
+> [!WARNING]
+> Projects 命名不规范，变量名应改为 projects。
+
+> [!WARNING]
+> App.vue 仍然保留 firstProject 的旧注释，必须删除或改成 projects 数据流说明。
+
+> [!WARNING]
+> project.ts 当前格式过于拥挤，需要格式化成多行类型定义。
+
+> [!WARNING]
+> answer.md 中 Vue 代码块没有完整显示，必须用 ```vue 正确包住。
+
+> [!WARNING]
+> 今日复盘区域为空，不符合严格训练要求。
+
+### 4. 必须记住
+
+> [!IMPORTANT]
+> Project 表示一个项目对象，Project[] 表示多个项目对象组成的数组。
+
+> [!IMPORTANT]
+> v-for 用来遍历数组并渲染列表，key 用来给每一项提供稳定唯一标识。
+
+> [!IMPORTANT]
+> props 是父组件传给子组件的数据，ProjectCard 不应该写死数据，而应该通过 props 接收外部传入的 project。
