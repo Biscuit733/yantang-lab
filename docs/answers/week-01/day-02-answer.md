@@ -28,7 +28,7 @@
 - [√] 项目能正常运行
 - [√] 完成 Git commit
 - [√] 推送到 GitHub
-- [ ] 完成英语小练习
+- [√] 完成英语小练习
 
 补充说明：
 
@@ -347,7 +347,7 @@ const props = defineProps({
 
 ## 题目：我在这个项目里是如何用 Vue3 和 TypeScript 管理作品集数据的？
 
-我的回答：
+我的回答：首先是用ts 来定义我的数据类型，包括每个对象所包含的元素以及类型。然后利用vue3的一些基础语法，定义一个组件。然后在父组件中先通过引用定义好的数据类型，去给定义好的类型，赋值。将实际的数组赋给定义好的类型，然后通过v-for循环遍历这个数组，将每个元素丢给封装好的子组件，通过props 和defineProps 来实现数据的传递，同时也实现了组件的复用性。
 
 ```txt
 
@@ -369,7 +369,7 @@ const props = defineProps({
 
 ### 题目 1：我用数组管理多个项目。
 
-我的翻译：
+我的翻译：I use an array to manage multiple projects.
 
 ```txt
 
@@ -379,7 +379,7 @@ const props = defineProps({
 
 ### 题目 2：这个组件用来渲染项目卡片。
 
-我的翻译：
+我的翻译：this componet is used to render a project card.
 
 ```txt
 
@@ -389,7 +389,7 @@ const props = defineProps({
 
 ### 题目 3：每个项目都通过 props 传给 ProjectCard 组件。
 
-我的翻译：
+我的翻译：each project is rendered with a reusable ProjectCard component.
 
 ```txt
 
@@ -402,7 +402,7 @@ const props = defineProps({
 请尝试写 2-3 句英文介绍今天的功能：
 
 ```txt
-
+today,i learned how to use Vue3 and TypeScript to manage list of projects.List can be rendered many components with "v-for".components prop is used to pass data to child components.
 ```
 
 可参考句型：
@@ -475,7 +475,10 @@ Each project is rendered with a reusable ProjectCard component.
 
 # 8. 今日 Git 记录
 
-执行过的命令：
+执行过的命令： git status 先查看了提交信息
+然后git add . 提交了所有文件
+最后git commit -m "add list of projects" 提交了提交信息
+最后git push -u origin main 推送了提交信息到远程仓库
 
 ```bash
 
@@ -541,14 +544,14 @@ GitHub 链接：
 
 请如实勾选：
 
-- [ ] 我没有复制多个 HTML 卡片，而是使用了 `v-for`
-- [ ] 我能解释 `Project` 和 `Project[]`
-- [ ] 我能解释 `:key="project.id"`
-- [ ] 我能解释 `:project="project"`
-- [ ] 我能解释 props 是父组件传给子组件的数据
-- [ ] 我能解释为什么 ProjectCard 是可复用组件
-- [ ] 我完成了 Git commit 和 push
-- [ ] 我没有只让 AI 改代码，自己也理解了
+- [√] 我没有复制多个 HTML 卡片，而是使用了 `v-for`
+- [√] 我能解释 `Project` 和 `Project[]`
+- [√] 我能解释 `:key="project.id"`
+- [√] 我能解释 `:project="project"`
+- [√] 我能解释 props 是父组件传给子组件的数据
+- [√] 我能解释为什么 ProjectCard 是可复用组件
+- [√] 我完成了 Git commit 和 push
+- [√] 我没有只让 AI 改代码，自己也理解了
 
 如果有没勾选的，请写原因：
 
