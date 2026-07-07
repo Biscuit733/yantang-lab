@@ -4,7 +4,7 @@
     <h1>YanTang Lab</h1>
     <p>我的全栈 + AI 工程师成长实验室</p>
 
-    <ProjectCard :project="firstProject" />
+    <ProjectCard v-for="project in Projects" :key="project.id" :project="project" />
   </main>
 </template>
 
@@ -19,13 +19,27 @@
   import ProjectCard from './components/ProjectCard.vue'
   import type { Project } from './types/project'
 
-  const firstProject : Project = {
+  const Projects : Project[] = [{
     id:1,
     title: 'YanTang Lab 个人站',
     description: '用于展示我的前端、全栈、AI应用和部署能力。',
     techStack: ['Vue3', 'TypeScript', 'Vite'],
     status: "planning"
-  }
+  },{
+    id:2,
+    title: 'learning Pro',
+    description: '学习全栈知识，ai应用开发，部署能力',
+    techStack: ['Vue3', 'TypeScript', 'Vite'],
+    status: "building",
+    link: 'https://github.com/tjy1994/learning-pro'
+  },{
+    id:3,
+    title: '第三个模块内容',
+    description: '用于展示我的前端、全栈、AI应用和部署能力。',
+    techStack: ['Vue3', 'TypeScript', 'Vite'],
+    status: "done",
+    link: 'https://github.com/tjy1994/yantang-lab'
+  }]
 </script>
 
 <style scoped>

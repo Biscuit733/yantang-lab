@@ -9,6 +9,9 @@
                 <span v-if="index !== project.techStack.length - 1">/</span>
             </span>
         </div>
+        <p v-if="project.link">
+            <a v-if="project.link" :href="project.link" target="_blank">查看项目</a>
+        </p>
     </article>
 </template>
 
