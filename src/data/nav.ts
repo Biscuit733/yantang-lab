@@ -1,23 +1,12 @@
 export type NavItem = {
-  name: string
+  label: string
   path: string
 }
 
 export const navItems: NavItem[] = [
-    {
-        name:'Home',
-        path:'/'
-    },{
-        name:'About',
-        path:'/about'
-    },{
-        name:'Articles',
-        path:'/articles'
-    },{
-        name:'Gallery',
-        path:'/gallery'
-    },{
-        name:'Projects',
-        path:'/projects'
-    }
+  { label: 'Home', path: '/' },
+  { label: 'Articles', path: '/articles' },
+  { label: 'Gallery', path: '/gallery' },
+  { label: 'Projects', path: '/projects' },
+  { label: 'About', path: '/about' },
 ]

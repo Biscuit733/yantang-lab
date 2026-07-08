@@ -2,20 +2,20 @@
   <div class="app-shell">
     <AppHeader />
     <main class="page-shell">
-      <router-view />
+      <RouterView />
     </main>
   </div>
 </template>
 
 <script setup lang="ts">
 /**
- * App.vue 负责定义项目列表数据。
- * projects 使用 Project[] 类型约束。
- * 页面通过 v-for 遍历 projects，
- * 并把每一个 project 通过 props 传给 ProjectCard。
+ * App.vue 是应用的全局布局入口。
+ * 它负责渲染 AppHeader 和 RouterView。
+ * 具体页面内容由 Vue Router 根据当前路径匹配到对应的 views 页面组件。
+ * 这样可以避免把所有页面内容堆在 App.vue 中。
  */
-import { RouterView } from 'vue-router';
-import AppHeader from './components/AppHeader.vue';
+import { RouterView } from 'vue-router'
+import AppHeader from './components/AppHeader.vue'
 </script>
 
 <style scoped>

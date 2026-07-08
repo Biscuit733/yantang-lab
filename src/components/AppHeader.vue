@@ -1,18 +1,24 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router';
-import {navItems} from "../data/nav"
-
-
+import { RouterLink } from 'vue-router'
+import { navItems } from '../data/nav'
 </script>
 
 <template>
-    <header class="app-header">
-        <router-link class="logo" to="/">YanTang Lab</router-link>
+  <header class="app-header">
+    <RouterLink class="logo" to="/">YanTang Lab</RouterLink>
 
-        <nav>
-            <router-link v-for="navItem in navItems" :key="navItem.path" class="nav-link" :to="navItem.path" active-class="nav-link-active">{{navItem.name}}</router-link>
-        </nav>
-    </header>
+    <nav class="nav-list">
+      <RouterLink
+        v-for="navItem in navItems"
+        :key="navItem.path"
+        class="nav-link"
+        :to="navItem.path"
+        active-class="nav-link-active"
+      >
+        {{ navItem.label }}
+      </RouterLink>
+    </nav>
+  </header>
 </template>
 
 <style scoped>

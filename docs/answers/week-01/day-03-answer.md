@@ -210,7 +210,9 @@ export default router
 我的理解：
 
 ```txt
-
+router/index.ts 负责创建路由实例，并维护 path、name、component 的映射关系。
+用户访问不同 URL 时，Vue Router 会根据 routes 配置找到对应的 views 页面组件。
+最后的 404 路由用于兜底处理不存在的路径。
 ```
 
 ---
@@ -223,20 +225,20 @@ export default router
   <div class="app-shell">
     <AppHeader />
     <main class="page-shell">
-      <router-view />
+      <RouterView />
     </main>
   </div>
 </template>
 
 <script setup lang="ts">
 /**
- * App.vue 负责定义项目列表数据。
- * projects 使用 Project[] 类型约束。
- * 页面通过 v-for 遍历 projects，
- * 并把每一个 project 通过 props 传给 ProjectCard。
+ * App.vue 是应用的全局布局入口。
+ * 它负责渲染 AppHeader 和 RouterView。
+ * 具体页面内容由 Vue Router 根据当前路径匹配到对应的 views 页面组件。
+ * 这样可以避免把所有页面内容堆在 App.vue 中。
  */
-import { RouterView } from 'vue-router';
-import AppHeader from './components/AppHeader.vue';
+import { RouterView } from 'vue-router'
+import AppHeader from './components/AppHeader.vue'
 </script>
 
 <style scoped>
@@ -256,7 +258,8 @@ import AppHeader from './components/AppHeader.vue';
 我的理解：
 
 ```txt
-
+App.vue 现在是全局布局入口，不再直接写具体页面内容。
+AppHeader 负责顶部导航，RouterView 负责显示当前路由匹配到的 views 页面组件。
 ```
 
 ---
@@ -266,20 +269,26 @@ import AppHeader from './components/AppHeader.vue';
 ```vue
 <!-- 粘贴 src/components/AppHeader.vue -->
 <script setup lang="ts">
-import { RouterLink } from 'vue-router';
-import {navItems} from "../data/nav"
-
-
+import { RouterLink } from 'vue-router'
+import { navItems } from '../data/nav'
 </script>
 
 <template>
-    <header class="app-header">
-        <router-link class="logo" to="/">YanTang Lab</router-link>
+  <header class="app-header">
+    <RouterLink class="logo" to="/">YanTang Lab</RouterLink>
 
-        <nav>
-            <router-link v-for="navItem in navItems" :key="navItem.path" class="nav-link" :to="navItem.path" active-class="nav-link-active">{{navItem.name}}</router-link>
-        </nav>
-    </header>
+    <nav class="nav-list">
+      <RouterLink
+        v-for="navItem in navItems"
+        :key="navItem.path"
+        class="nav-link"
+        :to="navItem.path"
+        active-class="nav-link-active"
+      >
+        {{ navItem.label }}
+      </RouterLink>
+    </nav>
+  </header>
 </template>
 
 <style scoped>
@@ -324,7 +333,9 @@ import {navItems} from "../data/nav"
 我的理解：
 
 ```txt
-
+AppHeader 负责顶部导航展示。
+navItems 存放导航数据，模板通过 v-for 渲染多个 RouterLink。
+RouterLink 负责路由跳转，active-class 用来标记当前激活的导航项。
 ```
 
 ---
@@ -365,7 +376,8 @@ import { projects } from '../data/projects'
 我的理解：
 
 ```txt
-
+ProjectsView 是作品集页面组件。
+它从 src/data/projects.ts 读取项目数组，并通过 ProjectCard + v-for 渲染项目列表。
 ```
 
 ---
@@ -375,7 +387,7 @@ import { projects } from '../data/projects'
 ## 4.1 `src/router/index.ts`
 
 ```ts
-import {createRouter, createWebHistory} from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import NotFoundView from '../views/NotFoundView.vue'
 import AboutView from '../views/AboutView.vue'
@@ -389,37 +401,45 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView
+      component: HomeView,
     },
     {
       path: '/about',
       name: 'about',
-      component: AboutView
+      component: AboutView,
     },
     {
       path: '/articles',
       name: 'articles',
-      component: ArticlesView
+      component: ArticlesView,
     },
     {
       path: '/gallery',
       name: 'gallery',
-      component: GalleryView
+      component: GalleryView,
     },
     {
       path: '/projects',
       name: 'projects',
-      component: ProjectsView
+      component: ProjectsView,
     },
     {
       path: '/:pathMatch(.*)*',
       name: 'notFound',
-      component: NotFoundView
-    }
-  ]
+      component: NotFoundView,
+    },
+  ],
 })
 
 export default router
+```
+
+我的理解：
+
+```txt
+router/index.ts 是路由配置中心。
+routes 数组定义 URL 路径和页面组件的对应关系。
+createWebHistory 使用浏览器 history 模式，404 路由负责处理不存在的路径。
 ```
 
 ---
@@ -436,6 +456,13 @@ createApp(App).use(router).mount('#app')
 
 ```
 
+我的理解：
+
+```txt
+main.ts 是 Vue 应用入口。
+createApp(App) 创建应用实例，use(router) 把路由插件挂载到应用中，mount('#app') 把应用渲染到页面。
+```
+
 ---
 
 ## 4.3 `src/App.vue`
@@ -445,20 +472,20 @@ createApp(App).use(router).mount('#app')
   <div class="app-shell">
     <AppHeader />
     <main class="page-shell">
-      <router-view />
+      <RouterView />
     </main>
   </div>
 </template>
 
 <script setup lang="ts">
 /**
- * App.vue 负责定义项目列表数据。
- * projects 使用 Project[] 类型约束。
- * 页面通过 v-for 遍历 projects，
- * 并把每一个 project 通过 props 传给 ProjectCard。
+ * App.vue 是应用的全局布局入口。
+ * 它负责渲染 AppHeader 和 RouterView。
+ * 具体页面内容由 Vue Router 根据当前路径匹配到对应的 views 页面组件。
+ * 这样可以避免把所有页面内容堆在 App.vue 中。
  */
-import { RouterView } from 'vue-router';
-import AppHeader from './components/AppHeader.vue';
+import { RouterView } from 'vue-router'
+import AppHeader from './components/AppHeader.vue'
 </script>
 
 <style scoped>
@@ -475,26 +502,39 @@ import AppHeader from './components/AppHeader.vue';
 
 ```
 
+我的理解：
+
+```txt
+App.vue 负责全局布局，只保留 AppHeader 和 RouterView。
+真正的页面内容交给 router/index.ts 匹配到对应 views 组件后，由 RouterView 渲染出来。
+```
+
 ---
 
 ## 4.4 `src/components/AppHeader.vue`
 
 ```vue
 <script setup lang="ts">
-import { RouterLink } from 'vue-router';
-import {navItems} from "../data/nav"
-
-
+import { RouterLink } from 'vue-router'
+import { navItems } from '../data/nav'
 </script>
 
 <template>
-    <header class="app-header">
-        <router-link class="logo" to="/">YanTang Lab</router-link>
+  <header class="app-header">
+    <RouterLink class="logo" to="/">YanTang Lab</RouterLink>
 
-        <nav>
-            <router-link v-for="navItem in navItems" :key="navItem.path" class="nav-link" :to="navItem.path" active-class="nav-link-active">{{navItem.name}}</router-link>
-        </nav>
-    </header>
+    <nav class="nav-list">
+      <RouterLink
+        v-for="navItem in navItems"
+        :key="navItem.path"
+        class="nav-link"
+        :to="navItem.path"
+        active-class="nav-link-active"
+      >
+        {{ navItem.label }}
+      </RouterLink>
+    </nav>
+  </header>
 </template>
 
 <style scoped>
@@ -536,6 +576,13 @@ import {navItems} from "../data/nav"
 </style>
 ```
 
+我的理解：
+
+```txt
+AppHeader 通过 navItems 维护导航数据，并用 v-for 渲染 RouterLink。
+RouterLink 用于站内路由跳转，active-class 用于标记当前页面对应的导航项。
+```
+
 ---
 
 ## 4.5 `src/views/ProjectsView.vue`
@@ -570,6 +617,13 @@ import { projects } from '../data/projects'
 </style>
 ```
 
+我的理解：
+
+```txt
+ProjectsView 是 /projects 路由对应的页面组件。
+它读取 projects 数组，并把每个 project 传给 ProjectCard，实现作品集列表展示。
+```
+
 ---
 
 # 5. 今日面试表达
@@ -577,6 +631,10 @@ import { projects } from '../data/projects'
 ## 题目：我在这个项目里是如何使用 Vue Router 管理页面导航的？
 
 我的回答：1.首先我先定义了导航的类型， 然后在data文件夹下面创建了 类型nav， 以及实例化了navItems 2. 我创建了router/index.ts 配置路由界面，将路由和组件映射起来。3.去入口文件main.ts里面引入router,并且全局使用。4.在AppHeader里面引入了navItems,并且循环渲染了导航链接RouterLink。5.重写了APP.vue 在页面中先是用了AppHeader.vue 做了导航栏，然后下面用了routerView 用来渲染对应页面的内容。6.对应的页面内容分别放在了views文件夹下方的页面代码中。7.这样做的好处是拆分成了头部，内容的结构，并且不同的内容都分成了不同的views去存放，这样子便于管理维护，同样也提高了代码的阅读性。不至于一个页面冗余的很。
+
+补充表达：
+
+我在项目中引入了 Vue Router 来管理页面导航。router/index.ts 负责维护 URL 路径和页面组件之间的映射关系，views 目录负责存放具体页面。App.vue 现在不再堆所有页面内容，而是作为全局布局入口，只负责渲染 AppHeader 和 RouterView。用户点击 RouterLink 时，URL 会变化，RouterView 会渲染当前路径对应的页面组件。这样可以把首页、文章页、图片页、作品集页和关于页拆开维护，后续扩展详情页、后台页面和更多业务模块会更清晰。
 
 ```txt
 
@@ -634,6 +692,18 @@ import { projects } from '../data/projects'
 ```txt Router can navigate between pages and not refresh the page. i use Vue Router to manage page navigation.
 
 ```
+
+正确表达：
+
+1. I use Vue Router to manage page navigation.
+2. Each route maps a path to a page component.
+3. RouterView renders the current page component.
+
+英文项目介绍修正版：
+
+Today, I added Vue Router to my personal website.
+Each route maps a URL path to a page component.
+App.vue works as the global layout, and RouterView renders the current page.
 
 可参考：
 
@@ -733,10 +803,7 @@ GitHub 链接：我直接在消息里回你
 ## 9.1 今天真正学会了什么？
 
 ```txt
-1. 学习了 Vue Router 的使用方法，包括路由配置、导航组件、路由参数等。
-2. 理解了路由的原理，包括路由的匹配和渲染。
-3. 能够根据需求自定义路由配置，实现页面之间的导航。
-
+我学会了使用 Vue Router 把个人站从单页 Demo 拆成多页面结构，知道了 routes、RouterLink、RouterView 和 views 页面组件之间的关系。
 ```
 
 ---
@@ -744,16 +811,7 @@ GitHub 链接：我直接在消息里回你
 ## 9.2 今天只是照着做但还没完全懂的地方？
 
 ```txt
-1. 路由的匹配和渲染机制
-2. 路由参数的使用
-3. 路由守卫的使用
-4. 路由动画的使用
-5. 路由重定向的使用
-6. 路由守卫的使用
-7. 路由守卫的使用
-8. 路由守卫的使用
-9. 路由守卫的使用
-10. 路由守卫的使用
+createWebHistory 在部署时为什么需要服务器配置 history fallback，这一点还需要后续在部署阶段继续理解。
 ```
 
 ---
@@ -761,7 +819,7 @@ GitHub 链接：我直接在消息里回你
 ## 9.3 今天最大的错误或卡点是什么？
 
 ```txt
-
+answer.md 中 Vue 代码块没有完整包好，导致 GitHub 上显示不完整。后续贴 Vue 文件时必须使用 vue 代码块。
 ```
 
 ---
@@ -769,7 +827,7 @@ GitHub 链接：我直接在消息里回你
 ## 9.4 我能不能不用看代码解释 `RouterView`？
 
 ```txt
-RouterView 用来渲染当前页面的内容。
+可以。RouterView 是路由页面的出口，当前 URL 匹配到哪个页面组件，RouterView 就显示哪个组件。
 ```
 
 ---
@@ -777,10 +835,7 @@ RouterView 用来渲染当前页面的内容。
 ## 9.5 明天最需要补什么？
 
 ```txt
-1. 路由守卫的使用
-2. 路由动画的使用
-3. 路由重定向的使用
-等路由更深层次的内容
+明天需要学习状态管理，把多个页面共享的数据和筛选条件集中到 Pinia store 中。
 ```
 
 ---
@@ -853,3 +908,64 @@ RouterView 用来渲染当前页面的内容。
 - 本文件内容
 - Git commit 信息
 - 你最不确定的 1-3 个问题
+
+## ChatGPT 批改记录
+
+### 1. 本次评分
+
+- 代码完成度：82/100
+- 路由理解：78/100
+- 项目结构：80/100
+- 文档完整度：55/100
+- 代码规范：70/100
+- 综合评分：73/100
+
+### 2. 本次结论
+
+> [!IMPORTANT]
+> Day 3 条件通过，可以进入 Day 4，但 Day 3 的 answer.md 需要返工整理。
+
+### 3. 做得好的地方
+
+> [!NOTE]
+> 已完成 vue-router 的安装和接入，package.json 中已经包含 vue-router 依赖。
+
+> [!NOTE]
+> main.ts 已经通过 .use(router) 正确挂载路由。
+
+> [!NOTE]
+> router/index.ts 已经配置了首页、文章页、图片页、作品集页、关于页和 404 兜底路由。
+
+> [!NOTE]
+> ProjectsView.vue 已经从 src/data/projects.ts 读取项目数组，并通过 ProjectCard + v-for 渲染项目列表。
+
+### 4. 必须修正的问题
+
+> [!WARNING]
+> docs/answers/week-01/day-03-answer.md 中很多 Vue / TypeScript 代码块没有完整贴入，导致 GitHub 上显示不完整。
+
+> [!WARNING]
+> App.vue 中仍然保留了 Day 2 项目列表数据流的旧注释，但现在 App.vue 已经变成 AppHeader + RouterView 的全局布局入口，注释必须改掉。
+
+> [!WARNING]
+> AppHeader.vue 中导入了 RouterLink，但模板中使用的是小写 router-link。功能可以跑，但建议统一成大写 RouterLink，和导入保持一致。
+
+> [!WARNING]
+> src/data/nav.ts 中导航字段当前如果使用 name/path，也可以运行，但建议统一为 label/path，语义更清晰。
+
+> [!WARNING]
+> answer.md 中复盘和面试表达还需要补充，不能只贴代码。
+
+### 5. 必须记住
+
+> [!IMPORTANT]
+> App.vue 在引入 Vue Router 后，不应该继续堆页面内容，而应该作为全局布局入口，负责渲染 Header 和 RouterView。
+
+> [!IMPORTANT]
+> router/index.ts 负责维护 URL 路径和页面组件之间的映射关系。
+
+> [!IMPORTANT]
+> RouterLink 负责页面跳转，RouterView 负责渲染当前路由对应的页面组件。
+
+> [!IMPORTANT]
+> 404 路由用于兜底处理不存在的路径，避免用户访问错误地址时页面空白。
