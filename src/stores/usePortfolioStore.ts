@@ -73,9 +73,9 @@ export const usePortfolioStore = defineStore('portfolio', {
           )
         },
     
-        galleryTypes(state) {
+        galleryTypes(state): GalleryFilter[] {
           const types = state.gallery.map((item) => item.type)
-          return ['all', ...new Set(types)] as GalleryType[]
+          return ['all', ...new Set(types)]
         },
     
         filteredGallery(state) {
