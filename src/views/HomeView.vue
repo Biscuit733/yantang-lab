@@ -5,27 +5,26 @@
     <p class="description">
       我的个人学习型技术站，用来记录从前端开发转向全栈 + AI 应用工程师的过程。
     </p>
+
+    <section class="featured">
+      <h2>Featured Projects</h2>
+
+      <div class="featured-list">
+        <article
+          v-for="project in store.featuredProjects"
+          :key="project.id"
+          class="featured-card"
+        >
+          <h3>{{ project.title }}</h3>
+          <p>{{ project.description }}</p>
+        </article>
+      </div>
+    </section>
   </section>
 </template>
 
-<style scoped>
-.page {
-  padding: 80px 0;
-}
+<script setup lang="ts">
+import { usePortfolioStore } from '../stores/usePortfolioStore'
 
-.eyebrow {
-  color: #16a34a;
-  font-weight: 700;
-}
-
-h1 {
-  font-size: 56px;
-  margin: 12px 0;
-}
-
-.description {
-  /* max-width: 680px; */
-  color: #4b5563;
-  line-height: 1.8;
-}
-</style>
+const store = usePortfolioStore()
+</script>

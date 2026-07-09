@@ -3,9 +3,23 @@
     <h1>Projects</h1>
     <p>这里展示我的项目、实验和 AI 应用 Demo。</p>
 
+    <div class="filter-list">
+      <button
+        v-for="tag in store.projectTags"
+        :key="tag"
+        type="button"
+        :class="{ active: store.activeProjectTag === tag }"
+        @click="store.setActiveProjectTag(tag)"
+      >
+        {{ tag }}
+      </button>
+    </div>
+
+    <p>当前筛选结果：{{ store.filteredProjects.length }} 个项目</p>
+
     <div class="project-list">
       <ProjectCard
-        v-for="project in projects"
+        v-for="project in store.filteredProjects"
         :key="project.id"
         :project="project"
       />
@@ -15,7 +29,9 @@
 
 <script setup lang="ts">
 import ProjectCard from '../components/ProjectCard.vue'
-import { projects } from '../data/projects'
+import { usePortfolioStore } from '../stores/usePortfolioStore'
+
+const store = usePortfolioStore()
 </script>
 
 <style scoped>
@@ -23,5 +39,8 @@ import { projects } from '../data/projects'
   display: grid;
   gap: 16px;
   margin-top: 24px;
+}
+.page button.active{
+  background-color: #f0f0f0;
 }
 </style>
