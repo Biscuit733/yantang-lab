@@ -149,21 +149,28 @@ export type GalleryItem = {
 1. SFC 三部分：
 template负责的是html内容的编写，script setup负责的是js逻辑内容的编写，包括一些方法的定义和参数的定义。style scoped 是用来写css样式的， 并且scoped是限制了css只在这个vue下面生效。
 2. props：
-
+组件之间传参的方法，子组件可以接收父组件传递过来的参数。 ProjectCard是封装好的组件， 内部也都是定义的形参，需要父组件调用的时候传入实参。
 3. v-for key：
-
+：key 是用来作为唯一标识的。用来渲染。
 4. 数据流：
-
+单向数据流，从ProjectsView.vue 传递到 ProjectCard.vue。
 5. App.vue：
+App可以作为一个入口文件，用来引入所有的组件。  如果所有页面都直接写在这个app.vue上面，首先会非常冗余，后期维护起来也是特别麻烦。然后项目成了个单页面。每次渲染可能都要渲染所有内容，在使用性能方面也比较差。
 ```
 
 ```vue
 <!-- ProjectCard props -->
-
+defineProps({
+    project: {
+        type: Object,
+        default: () => ({})
+    }
+})
 ```
 
 ```vue
 <!-- 父组件 v-for -->
+<ProjectCard v-for="project in projects" :key="project.id" :project="project" />
 
 ```
 
@@ -171,30 +178,64 @@ template负责的是html内容的编写，script setup负责的是js逻辑内容
 
 ```txt
 1. 解决什么问题：
-
+Vue Router是vue里面用来处理路由的。 配置了前端页面路由和组件的对应关系，用户点击路由链接，会跳转到对应的组件。
 2. RouterLink：
-
+RouterLink 是用来创建路由链接的组件。 点击路由链接，会跳转到对应的路由。
+RouterLink 组件的属性：
+to：路由路径。
+exact：是否精确匹配。
+replace：是否替换当前路由。
 3. RouterView：
-
+RouterView是用来渲染组件的，根据当前路由，会渲染对应的组件。
 4. 404 路由：
+404放最后，是因为当其他所有路由失效 不匹配之后 才跳转到404页面。
 ```
 
 ```ts
 // 最小路由配置
+const router = createRouter({
+    history: createWebHashHistory(),
+    routes: [
+        {
+            path: '/',
+            component: () => import('@/views/ProjectsView.vue')
+        },
+        {
+            path: '/projects',
+            component: () => import('@/views/ProjectView.vue')
+        }
+        {
+            path: '/404',
+            component: () => import('@/views/NotFound.vue')
+        }
+    ]
+})
 ```
 
 ## 六、Pinia
 
 ```txt
 1. Pinia 解决什么问题：
-
+Pinia 是vue用来做状态管理的库，可以存放一些全局状态，存放一些全局计算值，以及一些公共方法。
 2. state/getters/actions：
-
+state：用来存放全局状态的。
+getters：用来存放全局计算值的。
+actions：用来存放全局方法的。
 3. Pinia 和 props：
-
+props：用来接收父组件传递过来的参数的。
+Pinia是用来存放全局的状态的。
 4. 适合/不适合放 Pinia 的数据：
-
+适合放：
+- 全局状态
+- 全局计算值
+- 全局方法
+不适合放：
+- 组件状态
+- 组件计算值
+- 组件方法
 5. featuredProjects：
+他是由状态值计算出来的值，所以是getter。
+getters：用来存放全局计算值的。
 ```
 
 ```ts
