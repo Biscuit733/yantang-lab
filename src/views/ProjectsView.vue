@@ -52,7 +52,8 @@ const store = usePortfolioStore()
   gap: 16px;
   margin-top: 24px;
 }
-.page button.active{
+
+.page button.active {
   background-color: #f0f0f0;
 }
 </style>

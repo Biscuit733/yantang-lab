@@ -1,17 +1,19 @@
 import { defineStore } from 'pinia'
 import type { GalleryType, GalleryItem } from '../types/gallery'
-import type { Project } from '../types/project'
+import type { Project, ProjectStatus } from '../types/project'
 
 export type ProjectFilter = 'All' | string
 export type GalleryFilter = 'all' | GalleryType
-export type ProjectStatusFilter = 'all' | string
+export type ProjectStatusFilter = 'all' | ProjectStatus
+
+const projectStatusTags: ProjectStatusFilter[] = ['all', 'planning', 'building', 'done']
 
 export const usePortfolioStore = defineStore('portfolio', {
     state: () => ({
         activeProjectTag : 'All' as ProjectFilter,
         activeGalleryType : 'all' as GalleryFilter,
         activeProjectStatus: 'all' as ProjectStatusFilter,
-        projectStatusTags: ['all', 'planning', 'building', 'done'],
+        projectStatusTags,
         projects: [
             {
               id: 1,
@@ -69,13 +71,13 @@ export const usePortfolioStore = defineStore('portfolio', {
             if (state.activeProjectStatus === 'all') {
               return state.projects
             }
-            return state.projects.filter((project) => project.status.includes(state.activeProjectStatus))
+            return state.projects.filter((project) => project.status === state.activeProjectStatus)
           }
           if (state.activeProjectStatus === 'all') {
             return state.projects.filter((project) => project.techStack.includes(state.activeProjectTag))
           }
           return state.projects.filter((project) =>
-            project.techStack.includes(state.activeProjectTag) && project.status.includes(state.activeProjectStatus),
+            project.techStack.includes(state.activeProjectTag) && project.status === state.activeProjectStatus,
           )
         },
     

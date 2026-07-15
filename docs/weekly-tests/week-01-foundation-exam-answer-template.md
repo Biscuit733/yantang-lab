@@ -275,6 +275,28 @@ ts
 vue
 8. Vue 代码不能普通文本：
 代码要写在代码块里 不能写在文本里。
+TypeScript Markdown 代码块示例：
+
+```ts
+export type ExamProject = {
+  id: number
+  title: string
+  status: 'planning' | 'building' | 'done'
+}
+```
+
+Vue Markdown 代码块示例：
+
+```vue
+<template>
+  <ProjectCard
+    v-for="project in projects"
+    :key="project.id"
+    :project="project"
+  />
+</template>
+```
+
 9. [!WARNING]：
 警告：
 提交到公共库不好，会导致隐私泄露。
@@ -285,17 +307,20 @@ vue
 ## 八、技术英语
 
 ```txt
-1.
-
-2.
-
-3.
+1. I use Pinia to manage shared state.
+2. The dashboard shows project statistics.
+3. ProjectStatusFilter can only be all or a valid project status.
+4. filteredProjects returns projects that match the current filters.
+5. flatMap creates one flattened array from nested arrays.
+6. RouterLink is used to navigate back to the projects page.
 ```
 
 英文项目介绍：
 
 ```txt
-英语不分暂时先不做
+This dashboard uses Pinia store data to show project statistics.
+It counts all projects, building projects, planning projects, and unique tech stacks.
+The unique tech stack count is calculated with flatMap and new Set.
 ```
 
 ## 九、实战任务
@@ -311,18 +336,20 @@ vue
 ```ts
 import { defineStore } from 'pinia'
 import type { GalleryType, GalleryItem } from '../types/gallery'
-import type { Project } from '../types/project'
+import type { Project, ProjectStatus } from '../types/project'
 
 export type ProjectFilter = 'All' | string
 export type GalleryFilter = 'all' | GalleryType
-export type ProjectStatusFilter = 'all' | string
+export type ProjectStatusFilter = 'all' | ProjectStatus
+
+const projectStatusTags: ProjectStatusFilter[] = ['all', 'planning', 'building', 'done']
 
 export const usePortfolioStore = defineStore('portfolio', {
     state: () => ({
         activeProjectTag : 'All' as ProjectFilter,
         activeGalleryType : 'all' as GalleryFilter,
         activeProjectStatus: 'all' as ProjectStatusFilter,
-        projectStatusTags: ['all', 'planning', 'building', 'done'],
+        projectStatusTags,
         projects: [
             {
               id: 1,
@@ -380,13 +407,13 @@ export const usePortfolioStore = defineStore('portfolio', {
             if (state.activeProjectStatus === 'all') {
               return state.projects
             }
-            return state.projects.filter((project) => project.status.includes(state.activeProjectStatus))
+            return state.projects.filter((project) => project.status === state.activeProjectStatus)
           }
           if (state.activeProjectStatus === 'all') {
             return state.projects.filter((project) => project.techStack.includes(state.activeProjectTag))
           }
           return state.projects.filter((project) =>
-            project.techStack.includes(state.activeProjectTag) && project.status.includes(state.activeProjectStatus),
+            project.techStack.includes(state.activeProjectTag) && project.status === state.activeProjectStatus,
           )
         },
     

@@ -38,7 +38,7 @@ const store = usePortfolioStore()
 </script>
 
 <style scoped>
-.page button.active{
+.page button.active {
   background-color: #f0f0f0;
 }
 </style>

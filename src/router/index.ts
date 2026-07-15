@@ -5,6 +5,7 @@ import AboutView from '../views/AboutView.vue'
 import ArticlesView from '../views/ArticlesView.vue'
 import GalleryView from '../views/GalleryView.vue'
 import ProjectsView from '../views/ProjectsView.vue'
+import DashboardView from '../views/DashboardView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL || '/'),
@@ -33,6 +34,11 @@ const router = createRouter({
       path: '/projects',
       name: 'projects',
       component: ProjectsView
+    },
+    {
+      path: '/dashboard',
+      name: 'dashboard',
+      component: DashboardView
     },
     {
       path: '/:pathMatch(.*)*',
