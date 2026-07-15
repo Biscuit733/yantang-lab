@@ -15,6 +15,18 @@
       </button>
     </div>
 
+    <div class="filter-list">
+      <button
+        v-for="status in store.projectStatusTags"
+        :key="status"
+        type="button"
+        :class="{ active: store.activeProjectStatus === status }"
+        @click="store.setActiveProjectStatus(status)"
+      >
+        {{ status }}
+      </button>
+    </div>
+
     <p>当前筛选结果：{{ store.filteredProjects.length }} 个项目</p>
 
     <div class="project-list">

@@ -240,30 +240,46 @@ getters：用来存放全局计算值的。
 
 ```ts
 // 最小 Pinia store
+import { defineStore } from 'pinia'
+const usePortfolioStore = defineStore('portfolio', {
+    const activeProjectStatus = ref('all')
+    const projects = ref<Project[]>([])
+    const filteredProjects = computed(() => {
+        if (activeProjectStatus.value === 'all') {
+            return projects.value
+        }
+        return projects.value.filter(project => project.status === activeProjectStatus.value)
+    })
+    function setActiveProjectStatus(status: ProjectStatus) {
+        activeProjectStatus.value = status
+    }
+})
 ```
 
 ## 七、Git / Markdown
 
 ```txt
 1. git status：
-
+用来查看当前代码有没有改动。
 2. git add .：
-
+把所有的内容提交到贮存区。
 3. git commit：
-
+提交改动到本地仓库。
 4. git push：
-
+把本地仓库内容推送到远端仓库。
 5. 敏感文件：
-
+这些东西提交到公共库不好，会导致隐私泄露。
 6. TS 代码块：
-
+ts
 7. Vue 代码块：
-
+vue
 8. Vue 代码不能普通文本：
-
+代码要写在代码块里 不能写在文本里。
 9. [!WARNING]：
-
+警告：
+提交到公共库不好，会导致隐私泄露。
 10. 复盘：
+用来复查每天的内容，以便后续可以先看到今日的问题。
 ```
 
 ## 八、技术英语
@@ -279,7 +295,7 @@ getters：用来存放全局计算值的。
 英文项目介绍：
 
 ```txt
-
+英语不分暂时先不做
 ```
 
 ## 九、实战任务
@@ -293,25 +309,219 @@ getters：用来存放全局计算值的。
 ### usePortfolioStore.ts
 
 ```ts
+import { defineStore } from 'pinia'
+import type { GalleryType, GalleryItem } from '../types/gallery'
+import type { Project } from '../types/project'
+
+export type ProjectFilter = 'All' | string
+export type GalleryFilter = 'all' | GalleryType
+export type ProjectStatusFilter = 'all' | string
+
+export const usePortfolioStore = defineStore('portfolio', {
+    state: () => ({
+        activeProjectTag : 'All' as ProjectFilter,
+        activeGalleryType : 'all' as GalleryFilter,
+        activeProjectStatus: 'all' as ProjectStatusFilter,
+        projectStatusTags: ['all', 'planning', 'building', 'done'],
+        projects: [
+            {
+              id: 1,
+              title: 'YanTang Lab 个人站',
+              description: '用于记录我的前端、全栈、AI 应用和部署能力成长过程。',
+              techStack: ['Vue 3', 'TypeScript', 'Vite'],
+              link: 'https://github.com/Biscuit733/yantang-lab',
+              status: 'building',
+            },
+            {
+              id: 2,
+              title: 'AI Content Hub',
+              description: '后续用于沉淀 AI 文案、图片资源和内容管理能力。',
+              techStack: ['AI', 'Node.js', 'API'],
+              status: 'planning',
+            },
+            {
+              id: 3,
+              title: 'MES Lite',
+              description: '面向制造业业务场景的轻量级管理系统练习项目。',
+              techStack: ['Vue 3', 'NestJS', 'Database'],
+              status: 'planning',
+            },
+          ] as Project[],
+
+        gallery: [
+            {
+              id: 1,
+              title: '小红书封面模板',
+              type: 'xiaohongshu',
+              description: '后续用于沉淀可复用封面资源。',
+            },
+            {
+              id: 2,
+              title: 'AI 海报资源',
+              type: 'poster',
+              description: '用于展示视觉资源和下载入口。',
+            },
+            {
+              id: 3,
+              title: '学习资料下载',
+              type: 'download',
+              description: '后续放 PDF、Markdown、图片素材。',
+            },
+          ] as GalleryItem[]
+    }),
+
+    getters: {
+        projectTags(state) {
+          const tags = state.projects.flatMap((project) => project.techStack)
+          return ['All', ...new Set(tags)]
+        },
+        filteredProjects(state) {
+          if (state.activeProjectTag === 'All') {
+            if (state.activeProjectStatus === 'all') {
+              return state.projects
+            }
+            return state.projects.filter((project) => project.status.includes(state.activeProjectStatus))
+          }
+          if (state.activeProjectStatus === 'all') {
+            return state.projects.filter((project) => project.techStack.includes(state.activeProjectTag))
+          }
+          return state.projects.filter((project) =>
+            project.techStack.includes(state.activeProjectTag) && project.status.includes(state.activeProjectStatus),
+          )
+        },
+    
+        galleryTypes(state): GalleryFilter[] {
+          const types = state.gallery.map((item) => item.type)
+          return ['all', ...new Set(types)]
+        },
+    
+        filteredGallery(state) {
+          if (state.activeGalleryType === 'all') {
+            return state.gallery
+          }
+    
+          return state.gallery.filter((item) => item.type === state.activeGalleryType)
+        },
+    
+        featuredProjects(state) {
+          return state.projects.slice(0, 2)
+        },
+    },
+
+    actions: {
+      setActiveProjectTag(tag: ProjectFilter) {
+        this.activeProjectTag = tag
+      },
+  
+      resetProjectFilter() {
+        this.activeProjectTag = 'All'
+      },
+  
+      setActiveGalleryType(type: GalleryFilter) {
+        this.activeGalleryType = type
+      },
+  
+      resetGalleryFilter() {
+        this.activeGalleryType = 'all'
+      },
+
+      setActiveProjectStatus(status: ProjectStatusFilter) {
+        this.activeProjectStatus = status
+      },
+      resetProjectStatusFilter() {
+        this.activeProjectStatus = 'all'
+      },
+    }
+})
 
 ```
 
 ### ProjectsView.vue
 
 ```vue
+<template>
+  <section class="page">
+    <h1>Projects</h1>
+    <p>这里展示我的项目、实验和 AI 应用 Demo。</p>
+
+    <div class="filter-list">
+      <button
+        v-for="tag in store.projectTags"
+        :key="tag"
+        type="button"
+        :class="{ active: store.activeProjectTag === tag }"
+        @click="store.setActiveProjectTag(tag)"
+      >
+        {{ tag }}
+      </button>
+    </div>
+
+    <div class="filter-list">
+      <button
+        v-for="status in store.projectStatusTags"
+        :key="status"
+        type="button"
+        :class="{ active: store.activeProjectStatus === status }"
+        @click="store.setActiveProjectStatus(status)"
+      >
+        {{ status }}
+      </button>
+    </div>
+
+    <p>当前筛选结果：{{ store.filteredProjects.length }} 个项目</p>
+
+    <div class="project-list">
+      <ProjectCard
+        v-for="project in store.filteredProjects"
+        :key="project.id"
+        :project="project"
+      />
+    </div>
+  </section>
+</template>
+
+<script setup lang="ts">
+import ProjectCard from '../components/ProjectCard.vue'
+import { usePortfolioStore } from '../stores/usePortfolioStore'
+
+const store = usePortfolioStore()
+</script>
+
+<style scoped>
+.project-list {
+  display: grid;
+  gap: 16px;
+  margin-top: 24px;
+}
+.page button.active{
+  background-color: #f0f0f0;
+}
+</style>
 
 ```
 
 ### 截图说明
 
 ```txt
-
+![alt text](image.png)
 ```
 
 ### build 结果
 
 ```txt
+PS D:\tjy\myPro\learnPro\yantang-lab> yarn build
+yarn run v1.22.22
+$ vue-tsc -b && vite build
+vite v8.1.3 building client environment for production...
+✓ 58 modules transformed.
+computing gzip size...
+dist/index.html                  0.46 kB │ gzip:  0.29 kB
+dist/assets/index-CWC8Iz7Z.css   5.15 kB │ gzip:  1.78 kB
+dist/assets/index-DyIOUZxj.js   99.68 kB │ gzip: 38.48 kB
 
+✓ built in 645ms
+Done in 3.06s.
+PS D:\tjy\myPro\learnPro\yantang-lab> 
 ```
 
 ## 十、复盘

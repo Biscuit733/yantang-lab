@@ -4,12 +4,14 @@ import type { Project } from '../types/project'
 
 export type ProjectFilter = 'All' | string
 export type GalleryFilter = 'all' | GalleryType
+export type ProjectStatusFilter = 'all' | string
 
 export const usePortfolioStore = defineStore('portfolio', {
     state: () => ({
         activeProjectTag : 'All' as ProjectFilter,
         activeGalleryType : 'all' as GalleryFilter,
-
+        activeProjectStatus: 'all' as ProjectStatusFilter,
+        projectStatusTags: ['all', 'planning', 'building', 'done'],
         projects: [
             {
               id: 1,
@@ -62,14 +64,18 @@ export const usePortfolioStore = defineStore('portfolio', {
           const tags = state.projects.flatMap((project) => project.techStack)
           return ['All', ...new Set(tags)]
         },
-    
         filteredProjects(state) {
           if (state.activeProjectTag === 'All') {
-            return state.projects
+            if (state.activeProjectStatus === 'all') {
+              return state.projects
+            }
+            return state.projects.filter((project) => project.status.includes(state.activeProjectStatus))
           }
-    
+          if (state.activeProjectStatus === 'all') {
+            return state.projects.filter((project) => project.techStack.includes(state.activeProjectTag))
+          }
           return state.projects.filter((project) =>
-            project.techStack.includes(state.activeProjectTag),
+            project.techStack.includes(state.activeProjectTag) && project.status.includes(state.activeProjectStatus),
           )
         },
     
@@ -106,6 +112,13 @@ export const usePortfolioStore = defineStore('portfolio', {
   
       resetGalleryFilter() {
         this.activeGalleryType = 'all'
+      },
+
+      setActiveProjectStatus(status: ProjectStatusFilter) {
+        this.activeProjectStatus = status
+      },
+      resetProjectStatusFilter() {
+        this.activeProjectStatus = 'all'
       },
     }
 })
